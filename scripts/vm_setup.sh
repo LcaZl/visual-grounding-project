@@ -11,7 +11,7 @@ source .venv/bin/activate
 echo "Installing necessary Python packages..."
 pip install -r scripts/vm_requirements.txt
 
-# Step 3: Check if the dataset exists, otherwise download it
+# Check if the dataset exists, otherwise download it
 DATASET_DIR="./dataset"
 REFCOCOG_DIR="$DATASET_DIR/refcocog"
 DATASET_FILE="$DATASET_DIR/refcocog.tar.gz"
