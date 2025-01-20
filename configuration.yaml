@@ -1,0 +1,90 @@
+# DATASET AND GENERAL SETTINGS
+
+dataset_path : dataset/refcocog
+device : cuda
+output_to : output
+verbose : False
+
+# DATASET
+
+dt_splits : # Splits that have to be loaded
+- test
+- train
+- val
+dt_samples_limit : 0.5 # Percentage of loaded samples of each split (0-100). 
+dt_full_test_set : False # Fix the full loading of test split
+dt_full_val_set : False # Fix the full loading of val split
+
+# Dataset sentences
+dt_sents_vector_type : Mean # Values: Mean & NoMean. Take the average sentences embeddings for each sample, or not
+dt_templates : # Sentences templates
+- 'a photo of {}'
+- '{} in the picture'
+- '{} in the foreground/background'
+- 'an image showing {}'
+dt_apply_template : True
+
+# Similarity matrix
+dt_ess_sm_path : matrices # Path where the similarity matrices will be stored or from which can be loaded
+dt_extra_similar_sents : True # Add to each sample the top-k similar sentences
+dt_ess_sm_k : 2 # K values of similar sentences to add to each sample
+dt_ess_sm_batch_size : 512 # Batch size for similarity matrix computation
+
+#  BASELINE
+bs_supp_model : Yolo # Values: FRCNN, SSD, Yolo. Object detection model for the baseline
+bs_sents_vector_type : Mean # Values: NoMean & Mean. As above, define the type of sentences embeddings used by the baseline.
+
+# ClipVS
+
+# Procedure settings
+nn_reload_weights_from : Null # Path to model weights e.g. output/ClipVS_experiments/experiment_0_maintr/model_weights.pth #
+nn_store_model_weights : True # At the end of the training pipeline, store model weights.
+nn_batch_size: 8 # Training, test and validation batch size
+nn_epochs: 2 # Epochs of training
+nn_grad_clipping : True
+nn_use_scheduler : True
+nn_scheduler_power : 0.7
+nn_fg_bg_percentile : 80
+
+# Optimizer
+nn_optimizer: AdamW
+nn_opt_learning_rate : 0.00001
+nn_wd : 0.000001
+
+# Model architecture
+nn_bbox_hidden_dim : 512 
+nn_film_layers : 3
+nn_dropout_prob : 0.3
+
+# Loss coefficients
+nn_giou_lambda : 2
+nn_l1_lambda : 0.001
+nn_bce_lambda : 0
+
+
+# GRID SEARCH
+# Specify parameters to test. The parameters correspond to the above ones (without gs_ prefix)
+# Any above parameter can be added by using the gs_ prefix and specifying values in [].
+
+# DATASET
+gs_dt_extra_similar_sents : [True]
+gs_dt_apply_template : [True,False]
+gs_dt_ess_sm_k : [1,2,3]
+
+# BASELINE
+gs_bs_supp_model : ["FRCNN","Yolo","SSD"]
+gs_bs_sents_vector_type : ["NoMean","Mean"]
+
+# ClipVS
+gs_nn_film_layers : [3]
+gs_nn_scheduler : [True]
+gs_nn_scheduler_power : [0.7]
+gs_nn_grad_clipping: [True, False]
+gs_nn_optimizer : ["AdamW"]
+gs_nn_dropout_prob : [0.3]
+gs_nn_opt_learning_rate: [0.00001]
+gs_nn_bbox_hidden_dim : [512]
+gs_nn_wd : [0.000001]
+gs_nn_giou_lambda : [0, 2]
+gs_nn_l1_lambda : [0, 0.001]
+gs_nn_bce_lambda : [0, 2]
